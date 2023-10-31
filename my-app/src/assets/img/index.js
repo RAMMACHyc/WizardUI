@@ -1,0 +1,1 @@
+export { default as Img01 } from './img-main-653ee10fb7aba556407221.jpg'
