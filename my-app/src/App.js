@@ -7,7 +7,7 @@ import {OrderSummary} from "./components/OrderSummary"
 import Navbar from "./components/Navbar"
 import { NoMatch } from "./components/NoMatch"
 import { Session } from "./components/Session"
-import {NewCategorie} from "./components/NewCategorie"
+import NewCategorie from './components/NewCategorie';
 import './App.css';
 
 
@@ -22,7 +22,7 @@ function App() {
         <Route path="/" element={ <Home/> } />
         <Route path="about" element={ <About/> } />
         <Route path="categories" element={ <Categories /> }>
-          <Route path="categorie" element={<NewCategorie />} />
+          <Route path="categorie/:id" element={<NewCategorie />} />
           <Route path="session" element={<Session />} />
         </Route>
         <Route path="register" element={ <Register/> } />
