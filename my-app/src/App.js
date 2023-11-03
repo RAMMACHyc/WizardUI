@@ -22,8 +22,9 @@ function App() {
         <Route path="/" element={ <Home/> } />
         <Route path="about" element={ <About/> } />
         <Route path="categories" element={ <Categories /> }>
-          <Route path="categorie/:id" element={<NewCategorie />} />
-          <Route path="session" element={<Session />} />
+          <Route path="categorie/:catId" element={<NewCategorie />}>
+            <Route path="session/:id" element={<Session />} />
+          </Route> 
         </Route>
         <Route path="register" element={ <Register/> } />
         <Route path="order-summary" element={ <OrderSummary/> } />

@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getCategory } from '../Data/data'; // Make sure to use the correct relative path
+import { getCategory } from '../Data/data';
+import { Link, Outlet } from 'react-router-dom'
+
 
 const NewCategorie = () => {
   const { catId } = useParams();
-  const [category, setCategory] = useState(null); // Initialize category as null
-  const [loading, setLoading] = useState(true); // Add a loading state
+  const [category, setCategory] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+
 
   useEffect(() => {
-    // Simulate data fetching with setTimeout
-    setTimeout(() => {
-      const fetchedCategory = getCategory(catId);
-      setCategory(fetchedCategory);
-      setLoading(false); // Set loading to false when data is available
-    }, 1000); // Simulating an asynchronous data fetch
+    const oneCategory = getCategory(catId);
+
+    if (oneCategory) {
+      setCategory(oneCategory);
+      setLoading(false);
+    } else {
+      setLoading(false); 
+    }
   }, [catId]);
 
   if (loading) {
-    return <p>Loading...</p>; // Display a loading message while data is being fetched
+    return <p>Loading...</p>;
   }
 
   if (!category) {
@@ -25,15 +31,23 @@ const NewCategorie = () => {
   }
 
   return (
-    <div>
+    <>
+    <Link to={'session/'+category.sessions[0].id}  > 
       <h1 className="font-bold text-2xl text-gray-400">{category.name}</h1>
       <div className="flex mt-4">
         <div className="w-52 h-20 border border-gray-900">
-          <h1 className="text-center font-bold mt-3">{category.name}</h1>
-          <p className="text-center">{category.desc}</p> {/* Use 'desc' instead of 'description' */}
+          <h1 className="text-center font-bold mt-3">{category.sessions[0].name}</h1>
+          <p className="text-center">{category.sessions[0].speaker.name} | {category.sessions[0].speaker.org} </p>
+        </div>
+        <div className="w-60 h-20 border border-gray-900 ml-4">
+          <h1 className="text-center font-bold mt-3">{category.sessions[1].name}</h1>
+          <p className="text-center">{category.sessions[1].speaker.name} | {category.sessions[1].speaker.org} </p>
         </div>
       </div>
-    </div>
+    </Link>
+    <Outlet />
+
+    </>
   );
 };
 
