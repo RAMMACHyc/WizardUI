@@ -1,54 +1,71 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink, Outlet } from 'react-router-dom';
 import { getCategory } from '../Data/data';
-import { Link, Outlet } from 'react-router-dom'
+import SkeletonLoading from '../components/SkeletonLoading'
 
-
-const NewCategorie = () => {
+const NewCategory = () => {
   const { catId } = useParams();
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
   useEffect(() => {
-    const oneCategory = getCategory(catId);
+    const fetchCategory = async () => {
+      try {
+        const oneCategory = getCategory(catId);
+        setCategory(oneCategory);
+      } catch (error) {
+        console.error('Error fetching category:', error);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      }
+    };
 
-    if (oneCategory) {
-      setCategory(oneCategory);
-      setLoading(false);
-    } else {
-      setLoading(false); 
-    }
+    fetchCategory();
   }, [catId]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const navLinkStyles = ({ isActive }) => {
+    return {
+      color: isActive ? 'rgb(0 157 207)' : 'black',
+    };
+  };
 
-  if (!category) {
-    return <div>Category not found</div>;
-  }
 
   return (
-    <>
-    <Link to={'session/'+category.sessions[0].id}  > 
-      <h1 className="font-bold text-2xl text-gray-400">{category.name}</h1>
-      <div className="flex mt-4">
-        <div className="w-52 h-20 border border-gray-900">
-          <h1 className="text-center font-bold mt-3">{category.sessions[0].name}</h1>
-          <p className="text-center">{category.sessions[0].speaker.name} | {category.sessions[0].speaker.org} </p>
+    <div>
+      {loading ? (
+        <SkeletonLoading number={category ? category.sessions.length : 1} />
+      ) : category ? (
+        <div>
+          <h1 className="font-bold text-2xl text-gray-400">{category.name}</h1>
+          {category.sessions.length > 0 ? (
+            <div>
+              <div className="flex gap-4 mt-4">
+                {category.sessions.map((session) => (
+                  <div key={session.id}>
+                    <NavLink to={`session/${session.id}`} style={navLinkStyles}>
+                      <div className="h-20 border border-gray-900 px-3">
+                        <h1 className="text-center font-bold mt-3">{session.name}</h1>
+                        <p className="text-center">
+                          {session.speaker.name} | {session.speaker.org}
+                        </p>
+                      </div>
+                    </NavLink>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div>No sessions available in this category</div>
+          )}
+          <Outlet />
         </div>
-        <div className="w-60 h-20 border border-gray-900 ml-4">
-          <h1 className="text-center font-bold mt-3">{category.sessions[1].name}</h1>
-          <p className="text-center">{category.sessions[1].speaker.name} | {category.sessions[1].speaker.org} </p>
-        </div>
-      </div>
-    </Link>
-    <Outlet />
-
-    </>
+      ) : (
+        <div>Category not found</div>
+      )}
+    </div>
   );
 };
 
-export default NewCategorie;
+export default NewCategory;

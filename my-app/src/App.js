@@ -6,9 +6,10 @@ import Categories from "./components/Categories"
 import {OrderSummary} from "./components/OrderSummary"
 import Navbar from "./components/Navbar"
 import { NoMatch } from "./components/NoMatch"
-import { Session } from "./components/Session"
+import  Session  from "./components/Session"
 import NewCategorie from './components/NewCategorie';
 import './App.css';
+
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
         <Route path="about" element={ <About/> } />
         <Route path="categories" element={ <Categories /> }>
           <Route path="categorie/:catId" element={<NewCategorie />}>
-            <Route path="session/:id" element={<Session />} />
+            <Route path="session/:sessionId" element={<Session />} />
           </Route> 
         </Route>
         <Route path="register" element={ <Register/> } />
@@ -31,8 +32,10 @@ function App() {
         <Route path="*" element={ <NoMatch />} />
 
       </Routes>
+     
+    </div> 
+      
 
-    </div>
     </div>
   )
 }
